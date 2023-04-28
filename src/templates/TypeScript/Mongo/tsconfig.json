@@ -13,16 +13,16 @@
                 "node_modules/*"
             ],
             "@base/*": [
-                "src/*"
+                "./src/*"
             ],
             "@api/*": [
-                "src/api/*"
+                "./src/api/*"
             ]
         },
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
     },
     "include": [
-        "src/**/*"
+        "./src/**/*"
     ]
 }
