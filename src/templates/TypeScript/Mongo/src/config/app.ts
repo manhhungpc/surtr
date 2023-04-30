@@ -11,8 +11,9 @@ export const appConfig = {
     name: env('APP_NAME'),
     port: Number(env('APP_PORT')),
     routePrefix: env('APP_ROUTE_PREFIX'),
-    mongoosePath: env('MONGOOSE_PATH'),
+    jwtSecret: env('JWT_SECRET'),
 
+    mongoosePath: env('MONGOOSE_PATH'),
     controllersDir: env('CONTROLLERS_DIR'),
     middlewaresDir: env('MIDDLEWARES_DIR'),
 

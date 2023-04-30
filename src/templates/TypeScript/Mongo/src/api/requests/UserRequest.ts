@@ -2,9 +2,9 @@ import { IsOptional, IsString } from 'class-validator';
 
 export class UserRequest {
     @IsOptional()
-    request1: number;
+    limit: number = 10;
 
     @IsOptional()
     @IsString()
-    request2: number = 1;
+    page: number = 1;
 }
