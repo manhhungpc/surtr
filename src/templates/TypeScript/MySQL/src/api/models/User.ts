@@ -24,13 +24,13 @@ export class User {
     username: string;
 
     @Column()
+    @Exclude()
     password: string;
 
     @Column()
     name: string;
 
     @Column()
-    @Exclude()
     bod: string;
 
     @Column()
