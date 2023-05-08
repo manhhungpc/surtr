@@ -1,50 +1,49 @@
-#!/usr/bin/env node
 import inquirer from "inquirer";
-import { getDatabaseQuestions, getTemplateQuestion } from "./questions";
+import { getDatabaseQuestions, getTemplateQuestion } from "./questions.js";
 import { CliOptions } from "./interfaces/CliOptions";
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
 
-// export class App{
-// }
-type Answers = {
-    [key: string]: string;
-};
+async function constructor() {
+    const options: CliOptions | null = await prompt();
+    if (options === null) return;
 
-function constructor() {
-    prompt();
+    createProjectContent(options.templatePath, options.tartgetPath);
+    renameProject(options.projectName, options.tartgetPath);
 }
 
 async function prompt() {
     const _dirname = path.dirname(fileURLToPath(import.meta.url));
+    // const _dirname = __dirname;
 
-    let answers: Answers = {};
     const templateQuestion = getTemplateQuestion(_dirname);
     const templateAnswer = await inquirer.prompt(templateQuestion);
-    answers.projectName = templateAnswer.projectName;
-    answers.template = templateAnswer.template;
 
     const dbQuestion = getDatabaseQuestions(_dirname, templateAnswer);
     const dbAnswer = await inquirer.prompt(dbQuestion);
-    answers.db = dbAnswer.database;
 
-    console.log(answers);
     const currDir = process.cwd();
     const options: CliOptions = {
-        projectName: answers.projectName,
-        tartgetPath: path.join(currDir, answers.projectName),
-        templateName: answers.template,
-        templatePath: path.join(_dirname, "templates", answers.db),
+        projectName: templateAnswer.projectName,
+        language: templateAnswer.language,
+        database: dbAnswer.database,
+        tartgetPath: path.join(currDir, templateAnswer.projectName),
+        templatePath: path.join(
+            _dirname,
+            "templates",
+            templateAnswer.language,
+            dbAnswer.database
+        ),
     };
 
-    console.log(options);
-    const project = createProject(options.tartgetPath);
-    if (!project) return;
+    const project = createProjectFolder(options.tartgetPath);
+    if (!project) return null;
+    return options;
 }
 
-function createProject(projectPath: string) {
+function createProjectFolder(projectPath: string) {
     if (fs.existsSync(projectPath)) {
         console.log(
             chalk.red(
@@ -58,4 +57,40 @@ function createProject(projectPath: string) {
     return true;
 }
 
-constructor();
+function createProjectContent(sourcePath: string, tartgetPath: string) {
+    const IGNORE_FILES = ["node_modules", ".env", "pnpm-lock.yaml"];
+    const sourceFiles = fs.readdirSync(sourcePath);
+
+    sourceFiles.map((file) => {
+        const sourceFilePath = path.join(sourcePath, file);
+        const fileStats = fs.statSync(sourceFilePath);
+
+        //ignore files that should not copy
+        if (IGNORE_FILES.includes(file)) return;
+
+        if (fileStats.isFile()) {
+            let fileData = fs.readFileSync(sourceFilePath, "utf-8");
+            const targetFile = path.join(tartgetPath, file);
+            // fs.writeFileSync(targetFile, fileData, "utf-8");
+            fs.copyFileSync(sourceFilePath, targetFile);
+        }
+
+        if (fileStats.isDirectory()) {
+            fs.mkdirSync(path.join(tartgetPath, file));
+            createProjectContent(sourceFilePath, path.join(tartgetPath, file));
+        }
+    });
+}
+
+function renameProject(name: string, projectPath: string) {
+    if (name === "." || name === "") return;
+
+    const packageJson = path.join(projectPath, "package.json");
+
+    const packageData = JSON.parse(fs.readFileSync(packageJson).toString());
+    packageData.name = name;
+
+    fs.writeFileSync(packageJson, JSON.stringify(packageData, null, 4));
+}
+
+export default constructor();

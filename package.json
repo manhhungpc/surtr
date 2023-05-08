@@ -1,11 +1,16 @@
 {
-    "name": "skyline-template-npm",
+    "name": "surtr",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "./dist/cli.js",
     "type": "module",
     "scripts": {
-        "start": "ts-node --experimental-specifier-resolution=node src/index.ts"
+        "dev": "ts-node --experimental-specifier-resolution=node src/cli.ts",
+        "build": "tsc && shx rm -rf dist/templates && shx cp -r src/templates dist",
+        "start": "node --es-module-specifier-resolution=node ./dist/cli.js"
+    },
+    "bin": {
+        "surtr": "./dist/cli.js"
     },
     "keywords": [],
     "author": "",
@@ -14,6 +19,7 @@
         "@types/inquirer": "^9.0.3",
         "@types/node": "^18.15.13",
         "nodemon": "^2.0.22",
+        "shx": "^0.3.4",
         "typescript": "^5.0.4"
     },
     "dependencies": {

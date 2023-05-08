@@ -1,6 +1,7 @@
 export interface CliOptions {
     projectName: string;
-    templateName: string;
+    language: string;
+    database: string;
     templatePath: string;
     tartgetPath: string;
 }

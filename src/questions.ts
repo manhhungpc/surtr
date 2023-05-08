@@ -13,9 +13,9 @@ export const getTemplateQuestion = (_dirname: string) => {
             message: "What your project name?",
         },
         {
-            name: "template",
+            name: "language",
             type: "list",
-            message: "What backend template would you like to use?",
+            message: "What backend language would you like to use?",
             choices: langDir,
         },
     ];
@@ -24,7 +24,7 @@ export const getTemplateQuestion = (_dirname: string) => {
 
 export const getDatabaseQuestions = (_dirname: string, prevAns: any) => {
     const dbChoice = readdirSync(
-        path.join(_dirname + `/templates/${prevAns.template}`)
+        path.join(_dirname + `/templates/${prevAns.language}`)
     );
     const questions: Array<Questions> = [
         {

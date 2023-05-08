@@ -5,5 +5,3 @@ temp
 .vscode
 .idea
 logs
-package-lock.json
-pnpm-lock.yaml

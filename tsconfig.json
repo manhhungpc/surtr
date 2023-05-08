@@ -1,16 +1,23 @@
 {
     "compilerOptions": {
         "target": "es6",
-        "module": "ESNext",
-        "moduleResolution": "Node",
+        "module": "es2022",
+        "lib": ["ESNEXT"],
+        "allowJs": true,
+        "moduleResolution": "node",
         "declaration": true,
         "sourceMap": true,
         "outDir": "dist",
         "rootDir": "src",
         "strict": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "resolveJsonModule": true,
+        "allowImportingTsExtensions": true,
+        "emitDeclarationOnly": true
     },
     "ts-node": {
         "esm": true
-    }
+    },
+    "exclude": ["./src/templates", "./dist"]
 }
