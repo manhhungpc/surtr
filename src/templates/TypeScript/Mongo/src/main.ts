@@ -8,7 +8,7 @@ import { getMetadataArgsStorage, useExpressServer } from 'routing-controllers';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import { fixModuleAlias } from './utils/module-alias';
-fixModuleAlias(__dirname)
+fixModuleAlias(__dirname);
 
 export class App {
     private app: express.Application = express();
@@ -89,6 +89,7 @@ export class App {
             { routePrefix: appConfig.routePrefix },
             {
                 components: {
+                    //@ts-ignore
                     schemas,
                     securitySchemes: {
                         bearerAuth: {

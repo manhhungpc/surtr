@@ -6,7 +6,6 @@ import { LoginService } from '@base/api/services/Auth/LoginService';
 
 @Service()
 @OpenAPI({
-    security: [{ bearerAuth: [] }],
     tags: ['Auth'],
 })
 @JsonController('/v1/auth')

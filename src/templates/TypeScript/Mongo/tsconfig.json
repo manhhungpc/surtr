@@ -2,6 +2,7 @@
     "compilerOptions": {
         "module": "commonjs",
         "esModuleInterop": true,
+        "allowJs": true,
         "target": "es2019",
         "noImplicitAny": true,
         "moduleResolution": "node",
@@ -9,20 +10,12 @@
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
-            "*": [
-                "node_modules/*"
-            ],
-            "@base/*": [
-                "./src/*"
-            ],
-            "@api/*": [
-                "./src/api/*"
-            ]
+            "*": ["node_modules/*"],
+            "@base/*": ["./src/*"],
+            "@api/*": ["./src/api/*"]
         },
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
     },
-    "include": [
-        "./src/**/*"
-    ]
+    "include": ["./src/**/*"]
 }
