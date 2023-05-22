@@ -5,6 +5,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
+import shell from "shelljs";
 
 async function constructor() {
     const options: CliOptions | null = await prompt();
@@ -12,6 +13,20 @@ async function constructor() {
 
     createProjectContent(options.templatePath, options.tartgetPath);
     renameProject(options.projectName, options.tartgetPath);
+    // const success = preProcess(options);
+    // if (success) {
+    //     console.log(
+    //         chalk.green(
+    //             `🟢 | Template created successfully! Read README.md to complete the setup`
+    //         )
+    //     );
+    // } else {
+    //     console.log(
+    //         chalk.red(
+    //             `🔴 | Template created failed! Run "surtr" to install template manually`
+    //         )
+    //     );
+    // }
 }
 
 async function prompt() {
@@ -47,7 +62,7 @@ function createProjectFolder(projectPath: string) {
     if (fs.existsSync(projectPath)) {
         console.log(
             chalk.red(
-                `Folder ${projectPath} already exists! Delete or use another name.`
+                `❌ | Folder ${projectPath} already exists! Delete or use another name.`
             )
         );
         return false;
@@ -91,6 +106,21 @@ function renameProject(name: string, projectPath: string) {
     packageData.name = name;
 
     fs.writeFileSync(packageJson, JSON.stringify(packageData, null, 4));
+}
+
+function preProcess(options: CliOptions) {
+    const isNodeProject = fs.existsSync(
+        path.join(options.templatePath, "package.json")
+    );
+    if (isNodeProject) {
+        shell.cd(options.tartgetPath);
+        const runCreateCommand = shell.exec("surtr-create");
+        if (runCreateCommand.code !== 0) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 export default constructor();

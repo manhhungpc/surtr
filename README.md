@@ -1,4 +1,4 @@
-# Surtr - A fast generate template for Express project
+# Surtr - A fast template generator for an Express.js backend project that includes pre-configured database settings
 
 ### Feature
 
