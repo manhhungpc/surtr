@@ -13,7 +13,7 @@
     },
     "bin": {
         "surtr-create": "./dist/cli.js",
-        "surtr": "./dist/cli.js"
+        "surtr": "./dist/bin/cli.js"
     },
     "files": [
         "dist/"
@@ -31,7 +31,6 @@
     "dependencies": {
         "chalk": "^5.2.0",
         "inquirer": "^9.1.5",
-        "shelljs": "^0.8.5",
         "ts-node": "^10.9.1"
     }
 }

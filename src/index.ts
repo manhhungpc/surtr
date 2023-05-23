@@ -5,28 +5,35 @@ import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
-import shell from "shelljs";
+import { createInterface } from "readline";
 
 async function constructor() {
+    // detectCancel();
     const options: CliOptions | null = await prompt();
     if (options === null) return;
 
     createProjectContent(options.templatePath, options.tartgetPath);
     renameProject(options.projectName, options.tartgetPath);
-    // const success = preProcess(options);
-    // if (success) {
-    //     console.log(
-    //         chalk.green(
-    //             `🟢 | Template created successfully! Read README.md to complete the setup`
-    //         )
-    //     );
-    // } else {
-    //     console.log(
-    //         chalk.red(
-    //             `🔴 | Template created failed! Run "surtr" to install template manually`
-    //         )
-    //     );
-    // }
+    postProcess();
+}
+
+function detectCancel() {
+    if (process.platform === "win32") {
+        let rl = createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+        rl.on("SIGINT", () => {
+            process.emit("SIGINT");
+        });
+    }
+
+    // https://stackoverflow.com/questions/39255593/how-to-mock-readline-onsigint
+    process.on("SIGINT", () => {
+        //graceful shutdown
+        console.log("...\n", chalk.red(`🔴 | Operation cancelled by user!`));
+        process.exit(0);
+    });
 }
 
 async function prompt() {
@@ -108,19 +115,12 @@ function renameProject(name: string, projectPath: string) {
     fs.writeFileSync(packageJson, JSON.stringify(packageData, null, 4));
 }
 
-function preProcess(options: CliOptions) {
-    const isNodeProject = fs.existsSync(
-        path.join(options.templatePath, "package.json")
+function postProcess() {
+    console.log(
+        chalk.green(
+            `🟢 | Template created successfully! Read README.md to complete the setup`
+        )
     );
-    if (isNodeProject) {
-        shell.cd(options.tartgetPath);
-        const runCreateCommand = shell.exec("surtr-create");
-        if (runCreateCommand.code !== 0) {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 export default constructor();
