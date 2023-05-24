@@ -12,9 +12,10 @@
         "strict": true,
         "esModuleInterop": true,
         "noImplicitAny": true,
-        "resolveJsonModule": true,
-        "allowImportingTsExtensions": true,
-        "emitDeclarationOnly": true
+        "resolveJsonModule": true
+        // "allowImportingTsExtensions": true
+        // "noEmit": true
+        // "emitDeclarationOnly": true
     },
     "ts-node": {
         "esm": true

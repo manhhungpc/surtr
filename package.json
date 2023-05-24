@@ -4,7 +4,6 @@
     "author": "manhhungpc",
     "description": "A fast template generator for an Express.js backend project that includes pre-configured database settings.",
     "main": "./dist/cli.js",
-    "types": "dist/cli.d.ts",
     "type": "module",
     "scripts": {
         "dev": "ts-node --experimental-specifier-resolution=node src/cli.ts",
