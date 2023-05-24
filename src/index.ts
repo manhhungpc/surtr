@@ -5,10 +5,9 @@ import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
-import { createInterface } from "readline";
 
 async function constructor() {
-    // detectCancel();
+    detectCancel();
     const options: CliOptions | null = await prompt();
     if (options === null) return;
 
@@ -18,27 +17,16 @@ async function constructor() {
 }
 
 function detectCancel() {
-    if (process.platform === "win32") {
-        let rl = createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
-        rl.on("SIGINT", () => {
-            process.emit("SIGINT");
-        });
-    }
-
-    // https://stackoverflow.com/questions/39255593/how-to-mock-readline-onsigint
-    process.on("SIGINT", () => {
-        //graceful shutdown
-        console.log("...\n", chalk.red(`🔴 | Operation cancelled by user!`));
-        process.exit(0);
+    process.stdin.on("keypress", (_, key) => {
+        if (key.name === "escape" || (key.ctrl && key.name === "c")) {
+            console.log("...\n", chalk.red(`🔴 | Operation cancelled by user!`));
+            process.exit(0);
+        }
     });
 }
 
 async function prompt() {
     const _dirname = path.dirname(fileURLToPath(import.meta.url));
-    // const _dirname = __dirname;
 
     const templateQuestion = getTemplateQuestion(_dirname);
     const templateAnswer = await inquirer.prompt(templateQuestion);
@@ -52,12 +40,7 @@ async function prompt() {
         language: templateAnswer.language,
         database: dbAnswer.database,
         tartgetPath: path.join(currDir, templateAnswer.projectName),
-        templatePath: path.join(
-            _dirname,
-            "templates",
-            templateAnswer.language,
-            dbAnswer.database
-        ),
+        templatePath: path.join(_dirname, "templates", templateAnswer.language, dbAnswer.database),
     };
 
     const project = createProjectFolder(options.tartgetPath);
@@ -68,9 +51,7 @@ async function prompt() {
 function createProjectFolder(projectPath: string) {
     if (fs.existsSync(projectPath)) {
         console.log(
-            chalk.red(
-                `❌ | Folder ${projectPath} already exists! Delete or use another name.`
-            )
+            chalk.red(`❌ | Folder ${projectPath} already exists! Delete or use another name.`)
         );
         return false;
     }
@@ -116,11 +97,17 @@ function renameProject(name: string, projectPath: string) {
 }
 
 function postProcess() {
+    console.log(chalk.green(`🟢 | Created successfully!`));
     console.log(
-        chalk.green(
-            `🟢 | Template created successfully! Read README.md to complete the setup`
-        )
+        "To complete setup:\n",
+        "  1: ",
+        chalk.blue("npm install (or pnpm i, yarn i)\n"),
+        "  2: ",
+        chalk.blue(`config ${chalk.bold.cyanBright(".env")} file (see details in README.md)\n`),
+        "  3: ",
+        chalk.blue("npm run dev\n")
     );
+    console.log("Now you can build your millions dollar app! Happy coding 😄");
 }
 
 export default constructor();

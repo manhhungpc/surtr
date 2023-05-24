@@ -1,4 +1,4 @@
-# Surtr - A fast template generator for an Express.js backend project that includes pre-configured database settings
+# Surtr - A fast template generator for an Express.js backend project with pre-configured databases.
 
 ### Feature
 
@@ -7,7 +7,7 @@
 
 ### Future works:
 
--   Add Supabase, Firebase template for Typescript
+-   Add Supabase, Firebase, PostgreSQL template for Typescript
 -   Add templates for Javascript
 -   Check for working of all templates
 

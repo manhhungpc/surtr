@@ -17,7 +17,11 @@
     "files": [
         "dist/"
     ],
-    "keywords": [],
+    "keywords": [
+        "template",
+        "generator",
+        "express.js"
+    ],
     "license": "ISC",
     "devDependencies": {
         "@types/inquirer": "^9.0.3",
@@ -31,5 +35,10 @@
         "chalk": "^5.2.0",
         "inquirer": "^9.1.5",
         "ts-node": "^10.9.1"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/manhhungpc/surtr.git"
+    },
+    "homepage": "https://github.com/manhhungpc/surtr"
 }
