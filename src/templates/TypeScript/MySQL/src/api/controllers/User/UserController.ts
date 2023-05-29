@@ -4,6 +4,7 @@ import { Get, JsonController, QueryParams } from 'routing-controllers';
 import { UserService } from '@base/api/services/User/UserService';
 import { UserRequest } from '@base/api/requests/UserRequest';
 import { ControllerBase } from '@base/infrastructure/abstracts/ControllerBase';
+import { success } from '@base/utils/helpers';
 
 @Service()
 @OpenAPI({
@@ -18,6 +19,6 @@ export class UserController extends ControllerBase {
 
     @Get()
     public async index(@QueryParams() request: UserRequest) {
-        return await this.userService.getAll(request);
+        return success(await this.userService.getAll(request));
     }
 }

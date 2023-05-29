@@ -8,7 +8,7 @@ import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import 'reflect-metadata';
 import { fixModuleAlias } from './utils/module-alias';
-import { DataSource } from 'typeorm';
+import { dataSource } from './config/db';
 fixModuleAlias(__dirname);
 
 export class App {
@@ -38,18 +38,6 @@ export class App {
 
     private async typeORMConnect() {
         try {
-            const dataSource = new DataSource({
-                type: 'mysql',
-                name: appConfig.typeORM_Username,
-                host: appConfig.typeORM_Host,
-                port: appConfig.typeORM_Port,
-                username: appConfig.typeORM_Username,
-                password: appConfig.typeORM_Password,
-                database: appConfig.typeORM_Database,
-                logging: appConfig.typeORM_Log,
-                synchronize: appConfig.typeORM_Sync,
-                entities: appConfig.typeORM_Entities as any,
-            });
             await dataSource.initialize();
             console.log('Connect to MySQL is successful!');
         } catch (error) {
@@ -102,6 +90,7 @@ export class App {
             { routePrefix: appConfig.routePrefix },
             {
                 components: {
+                    //@ts-ignore
                     schemas,
                     securitySchemes: {
                         bearerAuth: {
