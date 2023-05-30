@@ -1,3 +1,3 @@
 export enum MsgError {
-    INVALID_USER = 'User not exist!',
+    USER_NOT_FOUND = 'User not exist!',
 }
