@@ -8,9 +8,10 @@
 ### Future works:
 
 -   Add Supabase, Firebase, PostgreSQL template for Typescript
--   Add templates for Javascript
+-   ~~Add templates for Javascript~~
 -   Check for working of all templates
+-   Probably support Nest.js
 
 ### Contribution
 
-Feel free to contribute, follow this [guide](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit)
+Feel free to contribute, just open an issue and create a pull request!
