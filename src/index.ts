@@ -51,7 +51,7 @@ async function prompt() {
 function createProjectFolder(projectPath: string) {
     if (fs.existsSync(projectPath)) {
         console.log(
-            chalk.red(`❌ | Folder ${projectPath} already exists! Delete or use another name.`)
+            chalk.red(`❌ | Folder ${projectPath} already exists! Delete or use another name.`),
         );
         return false;
     }
@@ -61,7 +61,7 @@ function createProjectFolder(projectPath: string) {
 }
 
 function createProjectContent(sourcePath: string, tartgetPath: string) {
-    const IGNORE_FILES = ["node_modules", ".env", "pnpm-lock.yaml"];
+    const IGNORE_FILES = ["node_modules", "dist", ".env", "pnpm-lock.yaml", "yarn.lock"];
     const sourceFiles = fs.readdirSync(sourcePath);
 
     sourceFiles.map((file) => {
@@ -105,9 +105,9 @@ function postProcess() {
         "  2: ",
         chalk.blue(`config ${chalk.bold.cyanBright(".env")} file (see details in README.md)\n`),
         "  3: ",
-        chalk.blue("npm run dev\n")
+        chalk.blue("npm run dev\n"),
     );
-    console.log("Now you can build your millions dollar app! Happy coding 😄");
+    console.log("Now you can start building your millions dollar app! Happy coding 😄");
 }
 
 export default constructor();
