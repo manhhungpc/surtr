@@ -12,6 +12,7 @@ export const appConfig = {
     port: Number(env('APP_PORT')),
     routePrefix: env('APP_ROUTE_PREFIX'),
     jwtSecret: env('JWT_SECRET'),
+    jwtExpires: env('JWT_EXPIRES', '7d'),
 
     typeORM_Host: env('TYPEORM_HOST'),
     typeORM_Port: Number(env('TYPEORM_PORT')),

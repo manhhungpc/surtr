@@ -2,7 +2,7 @@ import { IsOptional, IsString } from 'class-validator';
 
 export class LoginRequest {
     @IsString()
-    email: string;
+    username: string;
 
     @IsString()
     password: string;
