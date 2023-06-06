@@ -12,6 +12,7 @@ export const appConfig = {
     port: Number(env('APP_PORT')),
     routePrefix: env('APP_ROUTE_PREFIX'),
     jwtSecret: env('JWT_SECRET'),
+    jwtExpires: env('JWT_EXPIRES', '7d'),
 
     mongoosePath: env('MONGOOSE_PATH'),
     controllersDir: env('CONTROLLERS_DIR'),
