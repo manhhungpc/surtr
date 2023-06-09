@@ -50,6 +50,22 @@ async function prompt() {
         tools: tools.map((tool: string) => path.join(_dirname, toolsDir, tool)),
     };
 
+    const { confirm } = await inquirer.prompt({
+        name: "confirm",
+        message: `Your template configuration:\n
+        ${chalk.yellow("Name: ")}${chalk.cyan(options.projectName)}\n
+        ${chalk.yellow("Language: ")}${chalk.cyan(options.language)}\n
+        ${chalk.yellow("Database: ")}${chalk.cyan(options.database)}\n
+        ${chalk.yellow("Addition tools: ")}${chalk.cyan(tools.join(", "))}\n
+        Continue? `.replace(/(\n)\s+/g, "$1"),
+        type: "confirm",
+        default: true,
+    });
+    if (confirm === false) {
+        console.log(chalk.red(`🔴 | Operation cancelled!`));
+        process.exit(0);
+    }
+
     const project = createProjectFolder(options.tartgetPath);
     if (!project) return null;
 
@@ -133,6 +149,10 @@ function copyToolFiles(source: string, tartgetPath: string) {
                     });
                 }
                 fs.writeFileSync(packageTarget, JSON.stringify(packageTargetData, null, 4));
+            } else if (file === ".env.example") {
+                const envSourceData = fs.readFileSync(path.join(source, file));
+
+                fs.appendFileSync(path.join(tartgetPath, ".env.example"), envSourceData);
             } else {
                 fs.copyFileSync(sourceFilePath, targetFile);
             }
