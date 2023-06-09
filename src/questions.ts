@@ -22,16 +22,33 @@ export const getTemplateQuestion = (_dirname: string) => {
     return questions;
 };
 
-export const getDatabaseQuestions = (_dirname: string, prevAns: any) => {
-    const dbChoice = readdirSync(
-        path.join(_dirname + `/templates/${prevAns.language}`)
-    );
+export const getDatabaseQuestions = (_dirname: string, template: any) => {
+    const dbChoice = readdirSync(path.join(_dirname + `/templates/${template.language}`));
     const questions: Array<Questions> = [
         {
             name: "database",
             type: "list",
             message: "What database would you like to use?",
             choices: dbChoice,
+        },
+    ];
+    return questions;
+};
+
+export const getToolsQuestions = (_dirname: string, template: any) => {
+    let toolChoices = [];
+    if (template.language === "TypeScript") {
+        toolChoices = readdirSync(path.join(_dirname + "/tools-ts"));
+    } else {
+        toolChoices = readdirSync(path.join(_dirname + "/tools-js"));
+    }
+
+    const questions: Array<Questions> = [
+        {
+            name: "tools",
+            type: "checkbox",
+            message: "Which tools/services do you want to includes?",
+            choices: toolChoices,
         },
     ];
     return questions;

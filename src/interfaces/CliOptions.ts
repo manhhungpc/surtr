@@ -4,4 +4,5 @@ export interface CliOptions {
     database: string;
     templatePath: string;
     tartgetPath: string;
+    tools?: string[];
 }

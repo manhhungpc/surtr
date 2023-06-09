@@ -1,17 +1,18 @@
 import inquirer from "inquirer";
-import { getDatabaseQuestions, getTemplateQuestion } from "./questions.js";
+import { getToolsQuestions, getDatabaseQuestions, getTemplateQuestion } from "./questions.js";
 import { CliOptions } from "./interfaces/CliOptions";
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
 
+const IGNORE_FILES = ["node_modules", "dist", ".env", "pnpm-lock.yaml", "yarn.lock", "examples"];
+
 async function constructor() {
     detectCancel();
     const options: CliOptions | null = await prompt();
     if (options === null) return;
 
-    createProjectContent(options.templatePath, options.tartgetPath);
     renameProject(options.projectName, options.tartgetPath);
     postProcess();
 }
@@ -29,22 +30,35 @@ async function prompt() {
     const _dirname = path.dirname(fileURLToPath(import.meta.url));
 
     const templateQuestion = getTemplateQuestion(_dirname);
-    const templateAnswer = await inquirer.prompt(templateQuestion);
+    const template = await inquirer.prompt(templateQuestion);
 
-    const dbQuestion = getDatabaseQuestions(_dirname, templateAnswer);
-    const dbAnswer = await inquirer.prompt(dbQuestion);
+    const dbQuestion = getDatabaseQuestions(_dirname, template);
+    const db = await inquirer.prompt(dbQuestion);
+
+    const toolQuestions = getToolsQuestions(_dirname, template);
+    const { tools } = await inquirer.prompt(toolQuestions);
+
+    let toolsDir = template.language === "TypeScript" ? "/tools-ts" : "/tools-js";
 
     const currDir = process.cwd();
     const options: CliOptions = {
-        projectName: templateAnswer.projectName,
-        language: templateAnswer.language,
-        database: dbAnswer.database,
-        tartgetPath: path.join(currDir, templateAnswer.projectName),
-        templatePath: path.join(_dirname, "templates", templateAnswer.language, dbAnswer.database),
+        projectName: template.projectName,
+        language: template.language,
+        database: db.database,
+        tartgetPath: path.join(currDir, template.projectName),
+        templatePath: path.join(_dirname, "templates", template.language, db.database),
+        tools: tools.map((tool: string) => path.join(_dirname, toolsDir, tool)),
     };
 
     const project = createProjectFolder(options.tartgetPath);
     if (!project) return null;
+
+    createFilesContent(options.templatePath, options.tartgetPath);
+
+    options.tools?.map((source) => {
+        copyToolFiles(source, options.tartgetPath);
+    });
+
     return options;
 }
 
@@ -60,8 +74,7 @@ function createProjectFolder(projectPath: string) {
     return true;
 }
 
-function createProjectContent(sourcePath: string, tartgetPath: string) {
-    const IGNORE_FILES = ["node_modules", "dist", ".env", "pnpm-lock.yaml", "yarn.lock"];
+function createFilesContent(sourcePath: string, tartgetPath: string) {
     const sourceFiles = fs.readdirSync(sourcePath);
 
     sourceFiles.map((file) => {
@@ -79,8 +92,57 @@ function createProjectContent(sourcePath: string, tartgetPath: string) {
         }
 
         if (fileStats.isDirectory()) {
-            fs.mkdirSync(path.join(tartgetPath, file));
-            createProjectContent(sourceFilePath, path.join(tartgetPath, file));
+            if (!fs.existsSync(path.join(tartgetPath, file))) {
+                fs.mkdirSync(path.join(tartgetPath, file));
+            }
+            createFilesContent(sourceFilePath, path.join(tartgetPath, file));
+        }
+    });
+}
+
+function copyToolFiles(source: string, tartgetPath: string) {
+    const sourceFiles = fs.readdirSync(source);
+
+    sourceFiles.map((file) => {
+        const sourceFilePath = path.join(source, file);
+        const fileStats = fs.statSync(sourceFilePath);
+
+        //ignore files that should not copy
+        if (IGNORE_FILES.includes(file)) return;
+
+        if (fileStats.isFile()) {
+            const targetFile = path.join(tartgetPath, file);
+
+            // add devDep and dependencies from tools/source file to target file
+            if (file === "package.json") {
+                const packageSource = path.join(source, "package.json");
+                const packageSourceData = JSON.parse(fs.readFileSync(packageSource).toString());
+
+                const packageTarget = path.join(tartgetPath, "package.json");
+                const packageTargetData = JSON.parse(fs.readFileSync(packageTarget).toString());
+
+                if (packageSourceData.dependencies) {
+                    Object.entries(packageSourceData.dependencies).map(([key, value]) => {
+                        packageTargetData.dependencies[key] = value;
+                    });
+                }
+
+                if (packageSourceData.devDependencies) {
+                    Object.entries(packageSourceData.devDependencies).map(([key, value]) => {
+                        packageTargetData.devDependencies[key] = value;
+                    });
+                }
+                fs.writeFileSync(packageTarget, JSON.stringify(packageTargetData, null, 4));
+            } else {
+                fs.copyFileSync(sourceFilePath, targetFile);
+            }
+        }
+
+        if (fileStats.isDirectory()) {
+            if (!fs.existsSync(path.join(tartgetPath, file))) {
+                fs.mkdirSync(path.join(tartgetPath, file));
+            }
+            createFilesContent(sourceFilePath, path.join(tartgetPath, file));
         }
     });
 }
