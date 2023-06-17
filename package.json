@@ -1,21 +1,23 @@
 {
     "name": "surtr",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "author": "manhhungpc",
-    "description": "A fast template generator for an Express.js backend project that includes pre-configured database settings.",
+    "description": "A template generator for an Express.js backend project with pre-configured databases",
     "main": "./dist/cli.js",
     "type": "module",
     "scripts": {
         "dev": "ts-node --experimental-specifier-resolution=node src/cli.ts",
-        "build": "tsc && shx rm -rf dist/templates && shx cp -r src/templates dist",
+        "pre-build": "shx rm -rf src/templates/**/**/node_modules && shx rm -rf dist/templates && shx rm -rf dist/tools-ts",
+        "build": "npm run pre-build && tsc && shx cp -r src/templates dist && shx cp -r src/tools-ts dist",
         "start": "node --es-module-specifier-resolution=node ./dist/cli.js"
     },
     "bin": {
-        "surtr-create": "./dist/cli.js",
-        "surtr": "./dist/bin/cli.js"
+        "surtr": "./dist/cli.js",
+        "create-surtr": "./dist/bin/cli.js"
     },
     "files": [
-        "dist/"
+        "dist",
+        "src/templates"
     ],
     "keywords": [
         "template",

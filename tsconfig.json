@@ -20,5 +20,5 @@
     "ts-node": {
         "esm": true
     },
-    "exclude": ["./src/templates", "./dist"]
+    "exclude": ["./src/templates", "./src/tools-ts", "./dist"]
 }
