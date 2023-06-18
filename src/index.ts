@@ -52,7 +52,7 @@ async function prompt() {
 
     const { confirm } = await inquirer.prompt({
         name: "confirm",
-        message: `Your template configuration:\n
+        message: `Your project configuration:\n
         ${chalk.yellow("Name: ")}${chalk.cyan(options.projectName)}\n
         ${chalk.yellow("Language: ")}${chalk.cyan(options.language)}\n
         ${chalk.yellow("Database: ")}${chalk.cyan(options.database)}\n

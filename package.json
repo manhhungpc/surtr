@@ -1,6 +1,6 @@
 {
     "name": "surtr",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "author": "manhhungpc",
     "description": "A template generator for an Express.js backend project with pre-configured databases",
     "main": "./dist/cli.js",
@@ -21,10 +21,12 @@
     ],
     "keywords": [
         "template",
+        "generate",
         "generator",
+        "pre-configured",
         "express.js"
     ],
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {
         "@types/inquirer": "^9.0.3",
         "@types/node": "^18.15.13",
