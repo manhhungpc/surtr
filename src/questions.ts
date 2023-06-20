@@ -36,7 +36,7 @@ export const getDatabaseQuestions = (_dirname: string, template: any) => {
 };
 
 export const getToolsQuestions = (_dirname: string, template: any) => {
-    let toolChoices = [];
+    let toolChoices: string[] = [];
     if (template.language === "TypeScript") {
         toolChoices = readdirSync(path.join(_dirname + "/tools-ts"));
     } else {

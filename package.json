@@ -7,8 +7,8 @@
     "type": "module",
     "scripts": {
         "dev": "ts-node --experimental-specifier-resolution=node src/cli.ts",
-        "pre-build": "shx rm -rf src/templates/**/**/node_modules && shx rm -rf dist/templates && shx rm -rf dist/tools-ts",
-        "build": "npm run pre-build && tsc && shx cp -r src/templates dist && shx cp -r src/tools-ts dist",
+        "pre-build": "shx rm -rf src/templates/**/**/node_modules && shx rm -rf dist/templates && shx rm -rf dist/tools-*",
+        "build": "npm run pre-build && tsc && shx cp -r src/templates dist && shx cp -r src/tools-* dist",
         "start": "node --es-module-specifier-resolution=node ./dist/cli.js"
     },
     "bin": {

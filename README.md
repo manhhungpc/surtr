@@ -5,7 +5,7 @@ A template generator for Express.js project with pre-configured databases.
 ## Generate project
 
 ```shell
-> npx create-surtr
+> npx surtr
 ```
 
 ![example-cmd](/assets/example-cmd.png)

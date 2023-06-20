@@ -66,8 +66,11 @@ async function prompt() {
         process.exit(0);
     }
 
-    const project = createProjectFolder(options.tartgetPath);
-    if (!project) return null;
+    // if target path is not current dir
+    if (options.projectName !== "" && options.projectName !== ".") {
+        const project = createProjectFolder(options.tartgetPath);
+        if (!project) return null;
+    }
 
     createFilesContent(options.templatePath, options.tartgetPath);
 

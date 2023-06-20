@@ -1,0 +1,23 @@
+# Customize the configuration depends on your specific requirements.
+# Bellow is an example if you're using MongoDB
+version: "3.7"
+
+services:
+  app:
+    build: .
+    ports:
+      - "3030:3030"
+    restart: unless-stopped
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - /data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 
+      MONGO_INITDB_ROOT_PASSWORD:
+      MONGO_INITDB_DATABASE:
